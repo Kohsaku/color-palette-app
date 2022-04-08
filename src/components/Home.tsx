@@ -17,12 +17,12 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 const theme = createTheme();
 const useStyles = makeStyles((theme) => ({
   box: {
-    paddingLeft: "10vh",
-    paddingTop: "20vh",
+    paddingTop: "10vh",
   },
   container: {
+    paddingLeft: "36vh",
     backgroundColor: "white",
-    width: "80vw",
+    width: "50vw",
   },
 }));
 
@@ -38,10 +38,10 @@ const Item = ({ sx, children, background }: ITEM) => (
     sx={{
       color: "white",
       backgroundColor: background,
-      padding: (theme: Theme) => theme.spacing(1),
-      height: (theme: Theme) => theme.spacing(10),
+      paddingTop: (theme: Theme) => theme.spacing(15),
+      height: (theme: Theme) => theme.spacing(15),
+      width: (theme: Theme) => theme.spacing(30),
       textAlign: "center",
-      width: "50%",
     }}
   >
     {children}
@@ -66,6 +66,7 @@ const Home: React.FC = () => {
     ],
   });
   const [displayPalette, setDisplayPalette] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleClick = () => {
     const randomColor = palette.colors.map(
@@ -90,32 +91,27 @@ const Home: React.FC = () => {
       name: palette.name,
       colors: palette.colors,
     });
+    await setOpenModal(true);
   };
 
   return (
     <Box className={classes.box}>
-      <Grid
-        container
-        rowSpacing={0.1}
-        columnSpacing={0.1}
-        xs={10}
-        className={classes.container}
-      >
-        <Grid item xs={9} sx={{ paddingTop: "10vh", paddingLeft: "50vw" }}>
+      <Grid container className={classes.container}>
+        <Grid item sx={{ paddingTop: "10vh" }}>
           <Button onClick={handleClick}>generate</Button>
         </Grid>
         {displayPalette &&
           palette.colors.map((hex) => (
-            <Grid key={hex} item xs={4}>
-              <ButtonBase sx={{ width: "100%" }}>
+            <Grid key={hex}>
+              <ButtonBase>
                 <Item background={hex}>{hex}</Item>
               </ButtonBase>
             </Grid>
           ))}
-        <Grid item xs={12}>
+        <Grid item>
           <TextField label="name" variant="standard" onChange={handleChange} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item>
           <form onSubmit={handleSubmit}>
             <Button type="submit">保存する</Button>
           </form>
