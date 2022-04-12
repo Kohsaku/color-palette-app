@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Auth from "./components/Auth";
+import Collection from "./components/Collection";
 import "./App.css";
 
 const App: React.FC = () => {
@@ -9,6 +10,7 @@ const App: React.FC = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Auth />} />
+      <Route path="/collection" element={<Collection />} />
     </Routes>
   );
 };
