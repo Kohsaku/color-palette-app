@@ -1,7 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { collection, query, getDocs, orderBy } from "firebase/firestore";
-import { Button, Grid, Paper, Theme, SxProps, ButtonBase } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Paper,
+  Theme,
+  SxProps,
+  ButtonBase,
+  createTheme,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
+const theme = createTheme();
+const useStyles = makeStyles((theme) => ({
+  topContainer: {
+    paddingTop: "10vh",
+  },
+  collections: {
+    marginLeft: "5Vh",
+    marginBottom: "10vh",
+  },
+}));
 
 interface ITEM {
   children: React.ReactNode;
@@ -31,6 +51,7 @@ const Item = ({ sx, children, background }: ITEM) => (
 );
 
 const Collection: React.FC = () => {
+  const classes = useStyles();
   const [collections, setCollections] = useState<COLLECTIONS[]>([
     { createdAt: null, name: "", colors: [] },
   ]);
@@ -55,20 +76,23 @@ const Collection: React.FC = () => {
   };
 
   return (
-    <Grid container xs={12}>
-      collection
-      <Button onClick={handleClick}>button</Button>
-      {collections.map((collection) => (
-        <Grid item xs={4}>
-          {collection.colors.map((color) => (
-            <Grid>
-              <ButtonBase>
-                <Item background={color}>{color}</Item>
-              </ButtonBase>
-            </Grid>
-          ))}
+    <Grid container md={12} direction="row" className={classes.topContainer}>
+      <Grid item container md={9} direction="row">
+        {collections.map((collection) => (
+          <Grid item container md={3} className={classes.collections}>
+            {collection.colors.map((color) => (
+              <Grid item>
+                <ButtonBase>
+                  <Item background={color}>{color}</Item>
+                </ButtonBase>
+              </Grid>
+            ))}
+          </Grid>
+        ))}
+        <Grid item>
+          <Button onClick={handleClick}>button</Button>
         </Grid>
-      ))}
+      </Grid>
     </Grid>
   );
 };
