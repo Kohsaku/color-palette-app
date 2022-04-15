@@ -9,6 +9,7 @@ import {
   SxProps,
   ButtonBase,
   createTheme,
+  Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -16,9 +17,9 @@ const theme = createTheme();
 const useStyles = makeStyles((theme) => ({
   topContainer: {
     paddingTop: "10vh",
+    paddingLeft: "5vh",
   },
   collections: {
-    marginLeft: "5Vh",
     marginBottom: "10vh",
   },
 }));
@@ -76,10 +77,17 @@ const Collection: React.FC = () => {
   };
 
   return (
-    <Grid container md={12} direction="row" className={classes.topContainer}>
-      <Grid item container md={9} direction="row">
+    <Grid container md={15} direction="row" className={classes.topContainer}>
+      <Grid
+        item
+        container
+        md={12}
+        direction="row"
+        rowSpacing={15}
+        columnSpacing={15}
+      >
         {collections.map((collection) => (
-          <Grid item container md={3} className={classes.collections}>
+          <Grid item container md={3}>
             {collection.colors.map((color) => (
               <Grid item>
                 <ButtonBase>
@@ -87,6 +95,8 @@ const Collection: React.FC = () => {
                 </ButtonBase>
               </Grid>
             ))}
+            <Typography variant="h5">{collection.name}</Typography>
+            <Typography variant="h5">{collection.createdAt.seconds}</Typography>
           </Grid>
         ))}
         <Grid item>
