@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../firebase";
-import { collection, query, getDocs, orderBy } from "firebase/firestore";
+import { db, auth } from "../firebase";
+import {
+  collection,
+  query,
+  getDocs,
+  orderBy,
+  Timestamp,
+} from "firebase/firestore";
 import {
   Button,
   Grid,
@@ -51,6 +57,10 @@ const Item = ({ sx, children, background }: ITEM) => (
   </Paper>
 );
 
+const onClickCopy = (hex: string) => {
+  navigator.clipboard.writeText(hex);
+};
+
 const Collection: React.FC = () => {
   const classes = useStyles();
   const [collections, setCollections] = useState<COLLECTIONS[]>([
@@ -90,13 +100,19 @@ const Collection: React.FC = () => {
           <Grid item container md={3}>
             {collection.colors.map((color) => (
               <Grid item>
-                <ButtonBase>
+                <ButtonBase onClick={() => onClickCopy(color)}>
                   <Item background={color}>{color}</Item>
                 </ButtonBase>
               </Grid>
             ))}
             <Typography variant="h5">{collection.name}</Typography>
-            <Typography variant="h5">{collection.createdAt.seconds}</Typography>
+            {/* 作成日時の表示方法とレイアウトを考える */}
+            {/* <Typography variant="h5">
+              {new Timestamp(
+                collection.createdAt.seconds,
+                collection.createdAt.nanoseconds
+              ).toDate()}
+            </Typography> */}
           </Grid>
         ))}
         <Grid item>

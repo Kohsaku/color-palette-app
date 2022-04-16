@@ -23,6 +23,7 @@ import {
   IconButton,
   Box,
   ThemeProvider,
+  ButtonBase,
 } from "@mui/material";
 
 import { createTheme } from "@mui/material/styles";
@@ -263,6 +264,11 @@ const Auth = () => {
               >
                 SignIn with Google
               </Button>
+              <Grid item xs>
+                <ButtonBase onClick={() => navigate("/")}>
+                  <Typography>ログインせずに利用する</Typography>
+                </ButtonBase>
+              </Grid>
             </form>
             <Modal open={openModal} onClose={() => setOpenModal(false)}>
               <div className={classes.modal}>
