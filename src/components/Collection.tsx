@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import Menu from "./Menu";
 
 const theme = createTheme();
 const useStyles = makeStyles((theme) => ({
@@ -88,6 +89,7 @@ const Collection: React.FC = () => {
 
   return (
     <Grid container md={15} direction="row" className={classes.topContainer}>
+      <Menu />
       <Grid
         item
         container
