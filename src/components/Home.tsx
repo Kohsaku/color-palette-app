@@ -9,6 +9,8 @@ import {
   Button,
   ButtonBase,
   TextField,
+  Modal,
+  Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { db, auth } from "../firebase";
@@ -41,15 +43,27 @@ const Item = ({ sx, children, background, fontColor }: ITEM) => (
     sx={{
       color: fontColor,
       backgroundColor: background,
-      paddingTop: (theme: Theme) => theme.spacing(13),
-      height: (theme: Theme) => theme.spacing(13),
-      width: (theme: Theme) => theme.spacing(26),
+      paddingTop: (theme: Theme) => theme.spacing(12),
+      height: (theme: Theme) => theme.spacing(12),
+      width: (theme: Theme) => theme.spacing(24),
       textAlign: "center",
     }}
   >
     {children}
   </Paper>
 );
+
+const ModalStyle = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  boxShadow: 24,
+  p: 4,
+  bgcolor: "#dff9fb",
+  color: "#130f40",
+};
 
 // ---------------------
 // ↓コンポーネントの開始-----------------------
@@ -72,6 +86,7 @@ const Home: React.FC = () => {
     ],
   });
   const [displayPalette, setDisplayPalette] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const getAuthentication = () => {
     const user = auth.currentUser;
@@ -94,9 +109,6 @@ const Home: React.FC = () => {
     let r = parseInt(hex.substr(1, 2), 16);
     let g = parseInt(hex.substr(3, 2), 16);
     let b = parseInt(hex.substr(5, 2), 16);
-    let color = r * 299 + g * 587 + (b * 114) / 1000 < 128 ? "white" : "black";
-    console.log(color);
-
     return r * 299 + g * 587 + (b * 114) / 1000 < 128 ? "white" : "black";
   };
 
@@ -108,16 +120,6 @@ const Home: React.FC = () => {
     setPalette({ ...palette, name: event.target.value });
   };
 
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const colRef = collection(db, "palettes");
-  //   await addDoc(colRef, {
-  //     createdAt: Timestamp.fromDate(new Date()),
-  //     name: palette.name,
-  //     colors: palette.colors,
-  //   });
-  // };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const subColRef = collection(
@@ -126,12 +128,18 @@ const Home: React.FC = () => {
       `${auth.currentUser?.uid}`,
       "palettes"
     );
-    await setDoc(doc(subColRef), {
-      createdAt: Timestamp.fromDate(new Date()),
-      name: palette.name,
-      colors: palette.colors,
-    });
+    try {
+      await setDoc(doc(subColRef), {
+        createdAt: Timestamp.fromDate(new Date()),
+        name: palette.name,
+        colors: palette.colors,
+      }).then(() => setOpenModal(true));
+    } catch (err: any) {
+      alert(err.message);
+    }
   };
+
+  const handleClose = () => setOpenModal(false);
 
   return (
     <Box className={classes.box}>
@@ -177,6 +185,11 @@ const Home: React.FC = () => {
           </form>
         </Grid>
       </Grid>
+      <Modal open={openModal} onClose={handleClose}>
+        <Paper sx={ModalStyle}>
+          <Typography variant="h6">保存が完了しました!</Typography>
+        </Paper>
+      </Modal>
     </Box>
   );
 };

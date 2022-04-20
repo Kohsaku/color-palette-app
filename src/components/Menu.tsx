@@ -11,7 +11,12 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
-const style = {
+const MenuStyle = {
+  top: "10%",
+  left: "12%",
+};
+
+const PaperStyle = {
   position: "absolute" as "absolute",
   top: "15%",
   left: "12%",
@@ -42,7 +47,7 @@ const Menu = () => {
   };
   return (
     <div>
-      <IconButton onClick={handleOpenModal}>
+      <IconButton sx={MenuStyle} onClick={handleOpenModal}>
         <MenuIcon />
       </IconButton>
       <Modal
@@ -51,7 +56,7 @@ const Menu = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Paper sx={style} flex-direction="culumn">
+        <Paper sx={PaperStyle} flex-direction="culumn">
           {location.pathname === "/" ? (
             <List>
               {isLogin ? (

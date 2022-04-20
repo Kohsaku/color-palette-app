@@ -24,10 +24,10 @@ const theme = createTheme();
 const useStyles = makeStyles((theme) => ({
   topContainer: {
     paddingTop: "10vh",
-    paddingLeft: "5vh",
+    paddingLeft: "25vh",
   },
   collections: {
-    marginBottom: "10vh",
+    marginBottom: "5vh",
   },
 }));
 
@@ -58,6 +58,10 @@ const Item = ({ sx, children, background }: ITEM) => (
   </Paper>
 );
 
+const nameStyle = {
+  marginLeft: "2vh",
+};
+
 const onClickCopy = (hex: string) => {
   navigator.clipboard.writeText(hex);
 };
@@ -67,18 +71,6 @@ const Collection: React.FC = () => {
   const [collections, setCollections] = useState<COLLECTIONS[]>([
     { createdAt: null, name: "", colors: [] },
   ]);
-
-  //   const getFirestore = async () => {
-  //     const q = query(collection(db, "palettes"), orderBy("createdAt", "desc"));
-  //     const querySnapshot = await getDocs(q);
-  //     setCollections(
-  //       querySnapshot.docs.map((doc) => ({
-  //         createdAt: doc.data().createdAt,
-  //         name: doc.data().name,
-  //         colors: doc.data().colors,
-  //       }))
-  //     );
-  //   };
 
   const getFirestore = async () => {
     const subColRef = collection(
@@ -107,18 +99,19 @@ const Collection: React.FC = () => {
   };
 
   return (
-    <Grid container md={15} direction="row" className={classes.topContainer}>
+    <Grid container md={15} direction="row">
       <Menu />
       <Grid
+        className={classes.topContainer}
         item
         container
-        md={12}
+        md={15}
         direction="row"
         rowSpacing={15}
         columnSpacing={15}
       >
         {collections.map((collection) => (
-          <Grid item container md={3}>
+          <Grid item container md={3.5}>
             {collection.colors.map((color) => (
               <Grid item>
                 <ButtonBase onClick={() => onClickCopy(color)}>
@@ -126,7 +119,9 @@ const Collection: React.FC = () => {
                 </ButtonBase>
               </Grid>
             ))}
-            <Typography variant="h5">{collection.name}</Typography>
+            <Typography variant="h5" sx={nameStyle}>
+              {collection.name}
+            </Typography>
             {/* 作成日時の表示方法とレイアウトを考える */}
             {/* <Typography variant="h5">
               {new Timestamp(
