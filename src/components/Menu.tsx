@@ -55,11 +55,18 @@ const Menu = () => {
           {location.pathname === "/" ? (
             <List>
               {isLogin ? (
-                <ListItem button onClick={handleLogout}>
-                  <Link to="/login">
-                    <Typography>ログアウト</Typography>
-                  </Link>
-                </ListItem>
+                <>
+                  <ListItem button onClick={handleLogout}>
+                    <Link to="/login">
+                      <Typography>ログアウト</Typography>
+                    </Link>
+                  </ListItem>
+                  <ListItem button>
+                    <Link to="/collection">
+                      <Typography>保存一覧</Typography>
+                    </Link>
+                  </ListItem>
+                </>
               ) : (
                 <ListItem button>
                   <Link to="/login">
@@ -67,11 +74,6 @@ const Menu = () => {
                   </Link>
                 </ListItem>
               )}
-              <ListItem button>
-                <Link to="/collection">
-                  <Typography>保存一覧</Typography>
-                </Link>
-              </ListItem>
             </List>
           ) : (
             <List>

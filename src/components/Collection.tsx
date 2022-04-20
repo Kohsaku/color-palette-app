@@ -68,8 +68,26 @@ const Collection: React.FC = () => {
     { createdAt: null, name: "", colors: [] },
   ]);
 
+  //   const getFirestore = async () => {
+  //     const q = query(collection(db, "palettes"), orderBy("createdAt", "desc"));
+  //     const querySnapshot = await getDocs(q);
+  //     setCollections(
+  //       querySnapshot.docs.map((doc) => ({
+  //         createdAt: doc.data().createdAt,
+  //         name: doc.data().name,
+  //         colors: doc.data().colors,
+  //       }))
+  //     );
+  //   };
+
   const getFirestore = async () => {
-    const q = query(collection(db, "palettes"), orderBy("createdAt", "desc"));
+    const subColRef = collection(
+      db,
+      "users",
+      `${auth.currentUser?.uid}`,
+      "palettes"
+    );
+    const q = query(subColRef, orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
     setCollections(
       querySnapshot.docs.map((doc) => ({
@@ -79,6 +97,7 @@ const Collection: React.FC = () => {
       }))
     );
   };
+
   useEffect(() => {
     getFirestore();
   }, []);
