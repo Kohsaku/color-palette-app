@@ -53,6 +53,22 @@ const Item = ({ sx, children, background, fontColor }: ITEM) => (
   </Paper>
 );
 
+const generateButtonStyle = {
+  bgcolor: "#e84393",
+  marginBottom: "2vh",
+};
+
+const textFieldStyle = {
+  position: "absolute" as "absolute",
+  top: "84%",
+};
+
+const buttonStyle = {
+  position: "absolute" as "absolute",
+  top: "92%",
+  bgcolor: "#e84393",
+};
+
 const ModalStyle = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -61,7 +77,7 @@ const ModalStyle = {
   width: 400,
   boxShadow: 24,
   p: 4,
-  bgcolor: "#dff9fb",
+  bgcolor: "#d1d8e0",
   color: "#130f40",
 };
 
@@ -92,6 +108,7 @@ const Home: React.FC = () => {
     const user = auth.currentUser;
     user ? setIsLogin(true) : setIsLogin(false);
   };
+
   useEffect(() => {
     getAuthentication();
   }, []);
@@ -120,6 +137,7 @@ const Home: React.FC = () => {
     setPalette({ ...palette, name: event.target.value });
   };
 
+  // 名前を入れなければ送信できないようにする
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const subColRef = collection(
@@ -149,9 +167,9 @@ const Home: React.FC = () => {
           <Button
             variant="contained"
             onClick={handleClick}
-            sx={{ marginBottom: "1vh" }}
+            sx={generateButtonStyle}
           >
-            generate
+            カラーパレットを作成する
           </Button>
         </Grid>
         {displayPalette &&
@@ -169,7 +187,7 @@ const Home: React.FC = () => {
             label="name"
             variant="standard"
             onChange={handleChange}
-            sx={{ marginTop: "1vh" }}
+            sx={textFieldStyle}
           />
         </Grid>
         <Grid item xs={9}>
@@ -177,8 +195,8 @@ const Home: React.FC = () => {
             <Button
               type="submit"
               variant="contained"
-              sx={{ marginTop: "1vh" }}
-              disabled={isLogin === false}
+              sx={buttonStyle}
+              disabled={isLogin === false || palette.name === ""}
             >
               保存する
             </Button>

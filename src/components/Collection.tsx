@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
+import { collection, query, getDocs, orderBy } from "firebase/firestore";
 import {
-  collection,
-  query,
-  getDocs,
-  orderBy,
-  Timestamp,
-} from "firebase/firestore";
-import {
-  Button,
   Grid,
   Paper,
   Theme,
@@ -83,7 +76,16 @@ const Collection: React.FC = () => {
     const querySnapshot = await getDocs(q);
     setCollections(
       querySnapshot.docs.map((doc) => ({
-        createdAt: doc.data().createdAt,
+        createdAt:
+          `${doc.data().createdAt.toDate().getFullYear()}` +
+          "/" +
+          `${doc.data().createdAt.toDate().getMonth() + 1}` +
+          "/" +
+          `${doc.data().createdAt.toDate().getDate()}` +
+          "/" +
+          `${doc.data().createdAt.toDate().getHours()}` +
+          ":" +
+          `${doc.data().createdAt.toDate().getMinutes()}`,
         name: doc.data().name,
         colors: doc.data().colors,
       }))
@@ -93,10 +95,6 @@ const Collection: React.FC = () => {
   useEffect(() => {
     getFirestore();
   }, []);
-
-  const handleClick = () => {
-    console.log(collections);
-  };
 
   return (
     <Grid container md={15} direction="row">
@@ -119,21 +117,21 @@ const Collection: React.FC = () => {
                 </ButtonBase>
               </Grid>
             ))}
-            <Typography variant="h5" sx={nameStyle}>
-              {collection.name}
-            </Typography>
-            {/* 作成日時の表示方法とレイアウトを考える */}
-            {/* <Typography variant="h5">
-              {new Timestamp(
-                collection.createdAt.seconds,
-                collection.createdAt.nanoseconds
-              ).toDate()}
-            </Typography> */}
+            <Grid container direction="column">
+              <Grid item>
+                <Typography variant="h6" sx={nameStyle}>
+                  パレット名 : {collection.name}
+                </Typography>
+              </Grid>
+              {/* 作成日時の表示方法とレイアウトを考える */}
+              <Grid item>
+                <Typography variant="h6">
+                  作成日時 : {collection.createdAt}
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
         ))}
-        <Grid item>
-          <Button onClick={handleClick}>button</Button>
-        </Grid>
       </Grid>
     </Grid>
   );
