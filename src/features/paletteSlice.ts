@@ -25,15 +25,14 @@ export const paletteSlice = createSlice({
     ],
   },
   reducers: {
-    paletteName: (state, action: PayloadAction<PALETTE>) => {
-      state.name = action.payload.name;
-    },
-    paletteCreated: (state, action: PayloadAction<PALETTE>) => {
-      state.createdAt = action.payload.createdAt;
+    paletteSubmit: (state, action: PayloadAction<PALETTE>) => {
+      state = action.payload;
     },
   },
 });
 
-export const { paletteName } = paletteSlice.actions;
+export const { paletteSubmit } = paletteSlice.actions;
 
 export const selectPalette = (state: RootState) => state.palette;
+
+export default paletteSlice.reducer;

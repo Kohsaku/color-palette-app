@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { paletteSubmit } from "../features/paletteSlice";
 import {
   Box,
   Grid,
@@ -85,6 +87,7 @@ const ModalStyle = {
 // ↓コンポーネントの開始-----------------------
 const Home: React.FC = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [palette, setPalette] = useState({
     createdAt: "",
@@ -152,6 +155,13 @@ const Home: React.FC = () => {
         name: palette.name,
         colors: palette.colors,
       }).then(() => setOpenModal(true));
+      dispatch(
+        paletteSubmit({
+          createdAt: Timestamp.fromDate(new Date()).toString(),
+          name: palette.name,
+          colors: palette.colors,
+        })
+      );
     } catch (err: any) {
       alert(err.message);
     }
