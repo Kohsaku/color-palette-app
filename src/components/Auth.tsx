@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styles from "./Auth.module.css";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { updateUserProfile } from "../features/userSlice";
 import { auth, provider, storage } from "../firebase";
 import {
   signInWithPopup,
@@ -118,7 +117,6 @@ const Auth = () => {
       displayName: username,
       photoURL: url,
     });
-    dispatch(updateUserProfile({ displayName: username, photoUrl: url }));
     navigate("/");
   };
 
