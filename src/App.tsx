@@ -3,8 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Auth from "./components/Auth";
 import Collection from "./components/Collection";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import "./App.css";
 
 const App: React.FC = () => {

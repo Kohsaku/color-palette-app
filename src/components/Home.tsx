@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { db, auth } from "../firebase";
-import { collection, addDoc, Timestamp, doc, setDoc } from "firebase/firestore";
+import { collection, Timestamp, doc, setDoc } from "firebase/firestore";
 import Menu from "./Menu";
 
 // ↓スタイルや型定義に関する記述--------
