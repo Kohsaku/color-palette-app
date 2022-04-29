@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
@@ -72,6 +73,7 @@ const useStyles = makeStyles(() => ({
   modal: {
     outline: "none",
     position: "absolute",
+    height: 200,
     width: 400,
     borderRadius: 10,
     backgroundColor: "white",
@@ -79,17 +81,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ModalStyle = {
-  outlone: "none",
-  position: "absolute",
-  height: 200,
-  width: 400,
-  borderRadius: 10,
-  bgcolor: "white",
-  padding: "5%",
+const textFieldStyle = {
+  textAlign: "center",
   top: "50%",
   left: "50%",
-  transform: "translate(-50%, -50%)",
 };
 
 const Auth = () => {
@@ -145,6 +140,18 @@ const Auth = () => {
   const signInWithGoogle = async () => {
     await signInWithPopup(auth, provider).catch((err) => alert(err.message));
     navigate("/");
+  };
+
+  const sendResetEmail = async (event: React.MouseEvent<HTMLElement>) => {
+    await sendPasswordResetEmail(auth, resetEmail)
+      .then(() => {
+        setOpenModal(false);
+        setResetEmail("");
+      })
+      .catch((err: any) => {
+        alert(err.message);
+        setResetEmail("");
+      });
   };
 
   return (
@@ -296,7 +303,11 @@ const Auth = () => {
               </ButtonBase>
             </Grid>
           </form>
-          <Modal open={openModal} onClose={() => setOpenModal(false)}>
+          <Modal
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            sx={textFieldStyle}
+          >
             <div className={classes.modal} style={getModalStyle()}>
               <div>
                 <TextField
@@ -307,11 +318,12 @@ const Auth = () => {
                   name="email"
                   label="Reset E-mail"
                   value={resetEmail}
+                  sx={{ mt: "8vh" }}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setResetEmail(e.target.value);
                   }}
                 />
-                <IconButton>
+                <IconButton sx={{ mt: "9vh" }} onClick={sendResetEmail}>
                   <SendIcon />
                 </IconButton>
               </div>
