@@ -34,15 +34,23 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-const theme = createTheme();
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     height: "100vh",
   },
   image: {
     backgroundImage:
-      "url(https://images.unsplash.com/photo-1627484986972-e544190b8abb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1468&q=80)",
+      "url(https://images.unsplash.com/photo-1552036107-d407e661098f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2187&q=80)",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
     backgroundPosition: "center",
@@ -67,8 +75,22 @@ const useStyles = makeStyles((theme) => ({
     width: 400,
     borderRadius: 10,
     backgroundColor: "white",
+    boxShadow: "5",
   },
 }));
+
+const ModalStyle = {
+  outlone: "none",
+  position: "absolute",
+  height: 200,
+  width: 400,
+  borderRadius: 10,
+  bgcolor: "white",
+  padding: "5%",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+};
 
 const Auth = () => {
   const classes = useStyles();
@@ -126,173 +148,178 @@ const Auth = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
-        <CssBaseline />
-        <Grid item xs={false} sm={4} md={7} className={classes.image} />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              {isLogin ? "Login" : "Register"}
-            </Typography>
-            <form className={classes.form} noValidate>
-              {!isLogin && (
-                <>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                    autoComplete="username"
-                    autoFocus
-                    value={username}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      setUsername(e.target.value);
-                    }}
-                  />
-                  <Box textAlign="center">
-                    <IconButton>
-                      <label>
-                        <AccountCircleIcon
-                          fontSize="large"
-                          className={
-                            avatarImage
-                              ? styles.login_addIconLoaded
-                              : styles.login_addIcon
-                          }
-                        />
-                        <input
-                          className={styles.login_hiddenIcon}
-                          type="file"
-                          onChange={onChangeImageHandler}
-                        />
-                      </label>
-                    </IconButton>
-                  </Box>
-                </>
-              )}
+    <Grid container component="main" sx={{ height: "100vh" }}>
+      <CssBaseline />
+      <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            {isLogin ? "Login" : "Register"}
+          </Typography>
+          <form className={classes.form} noValidate>
+            {!isLogin && (
+              <>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                  autoFocus
+                  value={username}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUsername(e.target.value);
+                  }}
+                />
+                <Box textAlign="center">
+                  <IconButton>
+                    <label>
+                      <AccountCircleIcon
+                        fontSize="large"
+                        className={
+                          avatarImage
+                            ? styles.login_addIconLoaded
+                            : styles.login_addIcon
+                        }
+                      />
+                      <input
+                        className={styles.login_hiddenIcon}
+                        type="file"
+                        onChange={onChangeImageHandler}
+                      />
+                    </label>
+                  </IconButton>
+                </Box>
+              </>
+            )}
 
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setEmail(e.target.value);
-                }}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setPassword(e.target.value);
-                }}
-              />
-              <Button
-                disabled={
-                  isLogin
-                    ? !email || password.length < 6
-                    : !username || !email || password.length < 6 || !avatarImage
-                }
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                startIcon={<EmailIcon />}
-                onClick={
-                  isLogin
-                    ? async () => {
-                        try {
-                          await signInEmail();
-                        } catch (err: any) {
-                          alert(err.message);
-                        }
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setEmail(e.target.value);
+              }}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setPassword(e.target.value);
+              }}
+            />
+            <Button
+              disabled={
+                isLogin
+                  ? !email || password.length < 6
+                  : !username || !email || password.length < 6 || !avatarImage
+              }
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              startIcon={<EmailIcon />}
+              onClick={
+                isLogin
+                  ? async () => {
+                      try {
+                        await signInEmail();
+                      } catch (err: any) {
+                        alert(err.message);
                       }
-                    : async () => {
-                        try {
-                          await signUpEmail();
-                        } catch (err: any) {
-                          alert(err.message);
-                        }
+                    }
+                  : async () => {
+                      try {
+                        await signUpEmail();
+                      } catch (err: any) {
+                        alert(err.message);
                       }
-                }
-              >
-                {isLogin ? "Login" : "Register"}
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <span className={styles.login_reset}>Forgot password</span>
-                </Grid>
-                <Grid item>
-                  <span
-                    className={styles.login_toggleMode}
-                    onClick={() => setIsLogin(!isLogin)}
-                  >
-                    {isLogin ? "Create new account ?" : "Back to Login"}
-                  </span>
-                </Grid>
-              </Grid>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                startIcon={<CameraIcon />}
-                className={classes.submit}
-                onClick={signInWithGoogle}
-              >
-                SignIn with Google
-              </Button>
+                    }
+              }
+            >
+              {isLogin ? "Login" : "Register"}
+            </Button>
+            <Grid container>
               <Grid item xs>
-                <ButtonBase onClick={() => navigate("/")}>
-                  <Typography>ログインせずに利用する</Typography>
+                <ButtonBase>
+                  <span
+                    className={styles.login_reset}
+                    onClick={() => setOpenModal(true)}
+                  >
+                    パスワードを忘れた方
+                  </span>
                 </ButtonBase>
               </Grid>
-            </form>
-            <Modal open={openModal} onClose={() => setOpenModal(false)}>
-              <div className={classes.modal}>
-                <div>
-                  <TextField
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    type="email"
-                    name="email"
-                    label="Reset E-mail"
-                    value={resetEmail}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      setResetEmail(e.target.value);
-                    }}
-                  />
-                  <IconButton>
-                    <SendIcon />
-                  </IconButton>
-                </div>
+              <Grid item>
+                <span
+                  className={styles.login_toggleMode}
+                  onClick={() => setIsLogin(!isLogin)}
+                >
+                  {isLogin ? "新しいアカウントを作る" : "ログインへ戻る"}
+                </span>
+              </Grid>
+            </Grid>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              startIcon={<CameraIcon />}
+              className={classes.submit}
+              onClick={signInWithGoogle}
+            >
+              SignIn with Google
+            </Button>
+            <Grid item xs>
+              <ButtonBase onClick={() => navigate("/")}>
+                <Typography>ログインせずに利用する</Typography>
+              </ButtonBase>
+            </Grid>
+          </form>
+          <Modal open={openModal} onClose={() => setOpenModal(false)}>
+            <div className={classes.modal} style={getModalStyle()}>
+              <div>
+                <TextField
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  type="email"
+                  name="email"
+                  label="Reset E-mail"
+                  value={resetEmail}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setResetEmail(e.target.value);
+                  }}
+                />
+                <IconButton>
+                  <SendIcon />
+                </IconButton>
               </div>
-            </Modal>
-          </div>
-        </Grid>
+            </div>
+          </Modal>
+        </div>
       </Grid>
-    </ThemeProvider>
+    </Grid>
   );
 };
 export default Auth;
