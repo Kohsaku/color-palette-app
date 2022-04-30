@@ -56,8 +56,11 @@ const Item = ({ sx, children, background, fontColor }: ITEM) => (
 );
 
 const generateButtonStyle = {
-  bgcolor: "#e84393",
+  bgcolor: "#006341",
   marginBottom: "2vh",
+  "&:hover": {
+    background: "#C6893F",
+  },
 };
 
 const textFieldStyle = {
@@ -68,7 +71,10 @@ const textFieldStyle = {
 const buttonStyle = {
   position: "absolute" as "absolute",
   top: "92%",
-  bgcolor: "#e84393",
+  bgcolor: "#006341",
+  "&:hover": {
+    background: "#C6893F",
+  },
 };
 
 const ModalStyle = {
@@ -124,12 +130,12 @@ const Home: React.FC = () => {
     setPalette({ ...palette, colors: randomColor });
   };
 
-  //背景色の合わせて文字色変更の方法を考える。
+  //背景色に合わせて文字色変更の方法を考える。
   const fontColorChange = (hex: string) => {
     let r = parseInt(hex.substr(1, 2), 16);
     let g = parseInt(hex.substr(3, 2), 16);
     let b = parseInt(hex.substr(5, 2), 16);
-    return r * 299 + g * 587 + (b * 114) / 1000 < 128 ? "white" : "black";
+    return r * 0.299 + g * 0.587 + b * 0.114 <= 140 ? "#ffffff" : "f000000";
   };
 
   const onClickCopy = (hex: string) => {
@@ -140,7 +146,6 @@ const Home: React.FC = () => {
     setPalette({ ...palette, name: event.target.value });
   };
 
-  // 名前を入れなければ送信できないようにする
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const subColRef = collection(

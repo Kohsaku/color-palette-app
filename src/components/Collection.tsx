@@ -28,6 +28,7 @@ interface ITEM {
   children: React.ReactNode;
   sx?: SxProps;
   background: string;
+  fontColor: () => string;
 }
 
 interface COLLECTIONS {
@@ -36,10 +37,11 @@ interface COLLECTIONS {
   colors: string[];
 }
 
-const Item = ({ sx, children, background }: ITEM) => (
+const Item = ({ sx, children, background, fontColor }: ITEM) => (
   <Paper
     square={true}
     sx={{
+      color: fontColor,
       backgroundColor: background,
       paddingTop: (theme: Theme) => theme.spacing(4),
       height: (theme: Theme) => theme.spacing(6),
@@ -96,6 +98,13 @@ const Collection: React.FC = () => {
     getFirestore();
   }, []);
 
+  const fontColorChange = (hex: string) => {
+    let r = parseInt(hex.substr(1, 2), 16);
+    let g = parseInt(hex.substr(3, 2), 16);
+    let b = parseInt(hex.substr(5, 2), 16);
+    return r * 0.299 + g * 0.587 + b * 0.114 <= 140 ? "#ffffff" : "f000000";
+  };
+
   return (
     <Grid container md={15} direction="row">
       <Menu />
@@ -113,7 +122,12 @@ const Collection: React.FC = () => {
             {collection.colors.map((color) => (
               <Grid item>
                 <ButtonBase onClick={() => onClickCopy(color)}>
-                  <Item background={color}>{color}</Item>
+                  <Item
+                    background={color}
+                    fontColor={() => fontColorChange(color)}
+                  >
+                    {color}
+                  </Item>
                 </ButtonBase>
               </Grid>
             ))}

@@ -87,6 +87,15 @@ const textFieldStyle = {
   left: "50%",
 };
 
+const buttonStyle = {
+  bgcolor: "#006341",
+  "&:hover": {
+    background: "#C6893F",
+  },
+  mt: "1vh",
+  mb: "2vh",
+};
+
 const Auth = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -244,8 +253,8 @@ const Auth = () => {
               }
               fullWidth
               variant="contained"
-              color="primary"
               className={classes.submit}
+              sx={buttonStyle}
               startIcon={<EmailIcon />}
               onClick={
                 isLogin
@@ -290,9 +299,9 @@ const Auth = () => {
             <Button
               fullWidth
               variant="contained"
-              color="primary"
               startIcon={<CameraIcon />}
               className={classes.submit}
+              sx={buttonStyle}
               onClick={signInWithGoogle}
             >
               SignIn with Google
