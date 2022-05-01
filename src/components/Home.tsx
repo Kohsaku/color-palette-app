@@ -99,15 +99,15 @@ const Home: React.FC = () => {
     createdAt: "",
     name: "",
     colors: [
-      "f000000",
-      "f000000",
-      "f000000",
-      "f000000",
-      "f000000",
-      "f000000",
-      "f000000",
-      "f000000",
-      "f000000",
+      "hsl(0, 80, 60)",
+      "hsl(0, 80, 60)",
+      "hsl(0, 80, 60)",
+      "hsl(0, 80, 60)",
+      "hsl(0, 80, 60)",
+      "hsl(0, 80, 60)",
+      "hsl(0, 80, 60)",
+      "hsl(0, 80, 60)",
+      "hsl(0, 80, 60)",
     ],
   });
   const [displayPalette, setDisplayPalette] = useState(false);
@@ -123,14 +123,17 @@ const Home: React.FC = () => {
   }, []);
 
   const handleClick = () => {
-    const randomColor = palette.colors.map(
-      (hex) => "#" + Math.floor(Math.random() * 16777215).toString(16)
-    );
+    // const randomColor = palette.colors.map(
+    //   (hex) => "#" + Math.floor(Math.random() * 16777215).toString(16)
+    // );
+    const randomColor = palette.colors.map((hue) => {
+      let h = Math.random() * 360;
+      return `hsl(${h}, 70%, 50%)`;
+    });
     setDisplayPalette(true);
     setPalette({ ...palette, colors: randomColor });
   };
 
-  //背景色に合わせて文字色変更の方法を考える。
   const fontColorChange = (hex: string) => {
     let r = parseInt(hex.substr(1, 2), 16);
     let g = parseInt(hex.substr(3, 2), 16);
