@@ -35,9 +35,17 @@ const useStyles = makeStyles((theme) => ({
 interface ITEM {
   children: React.ReactNode;
   sx?: SxProps;
-  background: string;
-  fontColor: () => string;
+  background: void;
+  fontColor: any;
 }
+
+type FONT_COLOR_CHANGE = {
+  (hex: string): string;
+};
+
+type ON_CLICK_COPY = {
+  (hex: string): string;
+};
 
 const Item = ({ sx, children, background, fontColor }: ITEM) => (
   <Paper
@@ -134,14 +142,74 @@ const Home: React.FC = () => {
     setPalette({ ...palette, colors: randomColor });
   };
 
-  const fontColorChange = (hex: string) => {
+  const changeTo16 = (arr: number[]) => {
+    const RGB_MAX = 255;
+    const HUE_MAX = 360;
+    const SATURATION_MAX = 100;
+    const LIGHTNESS_MAX = 100;
+    let r, g, b, max, min;
+
+    let h = arr[0] % HUE_MAX;
+    let s = arr[1] / SATURATION_MAX;
+    let l = arr[2] / LIGHTNESS_MAX;
+
+    if (l < 0.5) {
+      max = l + l * s;
+      min = l - l * s;
+    } else {
+      max = l + (1 - l) * s;
+      min = l - (1 - l) * s;
+    }
+
+    const hp = HUE_MAX / 6;
+    const q = h / hp;
+    if (q <= 1) {
+      r = max;
+      g = (h / hp) * (max - min) + min;
+      b = min;
+    } else if (q <= 2) {
+      r = ((hp * 2 - h) / hp) * (max - min) + min;
+      g = max;
+      b = min;
+    } else if (q <= 3) {
+      r = min;
+      g = max;
+      b = ((h - hp * 2) / hp) * (max - min) + min;
+    } else if (q <= 4) {
+      r = min;
+      g = ((hp * 4 - h) / hp) * (max - min) + min;
+      b = max;
+    } else if (q <= 5) {
+      r = ((h - hp * 4) / hp) * (max - min) + min;
+      g = min;
+      b = max;
+    } else {
+      r = max;
+      g = min;
+      b = ((HUE_MAX - h) / hp) * (max - min) + min;
+    }
+
+    let red = r * RGB_MAX;
+    let green = g * RGB_MAX;
+    let blue = b * RGB_MAX;
+    return `${red.toString(16)}${green.toString(16)}${blue.toString(16)}`;
+  };
+
+  const hslToRgb = (hsl: string) => {
+    let sliced = hsl.slice(4, -1);
+    let splited = sliced.split(",");
+    let toInt = splited.map((str) => parseInt(str));
+    changeTo16(toInt);
+  };
+
+  const fontColorChange: FONT_COLOR_CHANGE = (hex) => {
     let r = parseInt(hex.substr(1, 2), 16);
     let g = parseInt(hex.substr(3, 2), 16);
     let b = parseInt(hex.substr(5, 2), 16);
     return r * 0.299 + g * 0.587 + b * 0.114 <= 140 ? "#ffffff" : "f000000";
   };
 
-  const onClickCopy = (hex: string) => {
+  const onClickCopy: ON_CLICK_COPY = (hex) => {
     navigator.clipboard.writeText(hex);
   };
 
@@ -191,15 +259,16 @@ const Home: React.FC = () => {
           </Button>
         </Grid>
         {displayPalette &&
-          palette.colors.map((hex) => (
-            <Grid key={hex}>
+          palette.colors.map((hsl) => {
+            let hex = hslToRgb(hsl);
+            <Grid key={hsl}>
               <ButtonBase onClick={() => onClickCopy(hex)}>
                 <Item background={hex} fontColor={() => fontColorChange(hex)}>
                   {hex}
                 </Item>
               </ButtonBase>
-            </Grid>
-          ))}
+            </Grid>;
+          })}
         <Grid item xs={9}>
           <TextField
             label="name"
