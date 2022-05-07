@@ -284,13 +284,15 @@ const Home: React.FC = () => {
         {displayPalette &&
           palette.colors.map((hsl) => {
             let hex = hslToRgb(hsl);
-            <Grid key={hsl}>
-              <ButtonBase onClick={() => onClickCopy(hex)}>
-                <Item background={hex} fontColor={() => fontColorChange(hex)}>
-                  {hex}
-                </Item>
-              </ButtonBase>
-            </Grid>;
+            return (
+              <Grid key={hex}>
+                <ButtonBase onClick={() => onClickCopy(hex)}>
+                  <Item background={hsl} fontColor={() => fontColorChange(hex)}>
+                    {hex}
+                  </Item>
+                </ButtonBase>
+              </Grid>
+            );
           })}
         <Grid item xs={9}>
           <TextField
