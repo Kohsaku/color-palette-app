@@ -36,15 +36,31 @@ interface ITEM {
   children: React.ReactNode;
   sx?: SxProps;
   background: string;
-  fontColor: () => string;
+  fontColor: any;
 }
 
-const Item = ({ sx, children, background, fontColor }: ITEM) => (
+type CHANGE_TO_16 = {
+  (arr: number[]): string;
+};
+
+type HSL_TO_RGB = {
+  (hsl: string): string;
+};
+
+type FONT_COLOR_CHANGE = {
+  (hex: string): string;
+};
+
+type ON_CLICK_COPY = {
+  (hex: string): void;
+};
+
+const Item = ({ children, background, fontColor }: ITEM) => (
   <Paper
     square={true}
     sx={{
       color: fontColor,
-      backgroundColor: background,
+      bgcolor: background,
       paddingTop: (theme: Theme) => theme.spacing(12),
       height: (theme: Theme) => theme.spacing(12),
       width: (theme: Theme) => theme.spacing(24),
@@ -132,16 +148,91 @@ const Home: React.FC = () => {
     });
     setDisplayPalette(true);
     setPalette({ ...palette, colors: randomColor });
+    console.log(palette.colors);
+    console.log(displayPalette);
   };
 
-  const fontColorChange = (hex: string) => {
+  const changeTo16: CHANGE_TO_16 = (arr) => {
+    let result: any;
+    let hue = arr[0];
+    let saturation = arr[1];
+    let lightness = arr[2];
+
+    if (
+      (hue || hue === 0) &&
+      hue <= 360 &&
+      (saturation || saturation === 0) &&
+      saturation <= 100 &&
+      (lightness || lightness === 0) &&
+      lightness <= 100
+    ) {
+      var red = 0;
+      var green = 0;
+      var blue = 0;
+      var q = 0;
+      var p = 0;
+      var hueToRgb;
+
+      hue = Number(hue) / 360;
+      saturation = Number(saturation) / 100;
+      lightness = Number(lightness) / 100;
+
+      if (saturation === 0) {
+        red = lightness;
+        green = lightness;
+        blue = lightness;
+      } else {
+        hueToRgb = function (p: number, q: number, t: number) {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+
+          if (t < 1 / 6) {
+            p += (q - p) * 6 * t;
+          } else if (t < 1 / 2) {
+            p = q;
+          } else if (t < 2 / 3) {
+            p += (q - p) * (2 / 3 - t) * 6;
+          }
+
+          return p;
+        };
+
+        if (lightness < 0.5) {
+          q = lightness * (1 + saturation);
+        } else {
+          q = lightness + saturation - lightness * saturation;
+        }
+        p = 2 * lightness - q;
+
+        red = hueToRgb(p, q, hue + 1 / 3);
+        green = hueToRgb(p, q, hue);
+        blue = hueToRgb(p, q, hue - 1 / 3);
+      }
+
+      result = `#${Math.round(red * 255).toString(16)}${Math.round(
+        green * 255
+      ).toString(16)}${Math.round(blue * 255).toString(16)}`;
+    }
+
+    return result;
+  };
+
+  const hslToRgb: HSL_TO_RGB = (hsl) => {
+    let sliced = hsl.slice(4, -1);
+    let splited = sliced.split(",");
+    let toInt = splited.map((str) => parseInt(str));
+    console.log(changeTo16(toInt));
+    return changeTo16(toInt);
+  };
+
+  const fontColorChange: FONT_COLOR_CHANGE = (hex) => {
     let r = parseInt(hex.substr(1, 2), 16);
     let g = parseInt(hex.substr(3, 2), 16);
     let b = parseInt(hex.substr(5, 2), 16);
     return r * 0.299 + g * 0.587 + b * 0.114 <= 140 ? "#ffffff" : "f000000";
   };
 
-  const onClickCopy = (hex: string) => {
+  const onClickCopy: ON_CLICK_COPY = (hex) => {
     navigator.clipboard.writeText(hex);
   };
 
@@ -191,15 +282,18 @@ const Home: React.FC = () => {
           </Button>
         </Grid>
         {displayPalette &&
-          palette.colors.map((hex) => (
-            <Grid key={hex}>
-              <ButtonBase onClick={() => onClickCopy(hex)}>
-                <Item background={hex} fontColor={() => fontColorChange(hex)}>
-                  {hex}
-                </Item>
-              </ButtonBase>
-            </Grid>
-          ))}
+          palette.colors.map((hsl) => {
+            let hex = hslToRgb(hsl);
+            return (
+              <Grid key={hex}>
+                <ButtonBase onClick={() => onClickCopy(hex)}>
+                  <Item background={hsl} fontColor={() => fontColorChange(hex)}>
+                    {hex}
+                  </Item>
+                </ButtonBase>
+              </Grid>
+            );
+          })}
         <Grid item xs={9}>
           <TextField
             label="name"
