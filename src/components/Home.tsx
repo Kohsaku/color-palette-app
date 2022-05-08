@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { paletteSubmit } from "../features/paletteSlice";
+import { login, logout, selectUser } from "../features/userSlice";
 import {
   Box,
   Grid,
@@ -109,8 +110,8 @@ const ModalStyle = {
 // ↓コンポーネントの開始-----------------------
 const Home: React.FC = () => {
   const classes = useStyles();
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
-  const [isLogin, setIsLogin] = useState(false);
   const [palette, setPalette] = useState({
     createdAt: "",
     name: "",
@@ -131,7 +132,7 @@ const Home: React.FC = () => {
 
   const getAuthentication = () => {
     const user = auth.currentUser;
-    user ? setIsLogin(true) : setIsLogin(false);
+    user ? dispatch(login(true)) : dispatch(logout(false));
   };
 
   useEffect(() => {
@@ -139,9 +140,6 @@ const Home: React.FC = () => {
   }, []);
 
   const handleClick = () => {
-    // const randomColor = palette.colors.map(
-    //   (hex) => "#" + Math.floor(Math.random() * 16777215).toString(16)
-    // );
     const randomColor = palette.colors.map((hue) => {
       let h = Math.random() * 360;
       return `hsl(${h}, 70%, 50%)`;
@@ -305,7 +303,7 @@ const Home: React.FC = () => {
               type="submit"
               variant="contained"
               sx={buttonStyle}
-              disabled={isLogin === false || palette.name === ""}
+              disabled={user.isLogin === false || palette.name === ""}
             >
               保存する
             </Button>

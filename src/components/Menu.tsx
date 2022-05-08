@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser, login, logout } from "../features/userSlice";
 import { auth } from "../firebase";
 import {
   Paper,
@@ -28,14 +30,16 @@ const PaperStyle = {
 };
 
 const Menu = () => {
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
   const location = useLocation();
 
   const getAuthentication = () => {
     const user = auth.currentUser;
-    user ? setIsLogin(true) : setIsLogin(false);
+    user ? dispatch(login(true)) : dispatch(logout(false));
   };
+
   useEffect(() => {
     getAuthentication();
   }, []);
@@ -59,7 +63,7 @@ const Menu = () => {
         <Paper sx={PaperStyle} flex-direction="culumn">
           {location.pathname === "/" ? (
             <List>
-              {isLogin ? (
+              {user.isLogin ? (
                 <>
                   <ListItem button onClick={handleLogout}>
                     <Link to="/login">

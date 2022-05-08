@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import paletteReducer from "../features/paletteSlice";
+import userReducer from "../features/userSlice";
 
 export const store = configureStore({
   reducer: {
     palette: paletteReducer,
+    user: userReducer,
   },
 });
 
