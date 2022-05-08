@@ -148,8 +148,6 @@ const Home: React.FC = () => {
     });
     setDisplayPalette(true);
     setPalette({ ...palette, colors: randomColor });
-    console.log(palette.colors);
-    console.log(displayPalette);
   };
 
   const changeTo16: CHANGE_TO_16 = (arr) => {
@@ -221,14 +219,13 @@ const Home: React.FC = () => {
     let sliced = hsl.slice(4, -1);
     let splited = sliced.split(",");
     let toInt = splited.map((str) => parseInt(str));
-    console.log(changeTo16(toInt));
     return changeTo16(toInt);
   };
 
   const fontColorChange: FONT_COLOR_CHANGE = (hex) => {
-    let r = parseInt(hex.substr(1, 2), 16);
-    let g = parseInt(hex.substr(3, 2), 16);
-    let b = parseInt(hex.substr(5, 2), 16);
+    let r = parseInt(hex.slice(1, 3), 16);
+    let g = parseInt(hex.slice(3, 5), 16);
+    let b = parseInt(hex.slice(5, 7), 16);
     return r * 0.299 + g * 0.587 + b * 0.114 <= 140 ? "#ffffff" : "f000000";
   };
 
