@@ -22,11 +22,9 @@ import {
   Modal,
   IconButton,
   Box,
-  ThemeProvider,
   ButtonBase,
 } from "@mui/material";
 
-import { createTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 
 import SendIcon from "@mui/icons-material/Send";
