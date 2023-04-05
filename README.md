@@ -8,9 +8,7 @@ Find color combination and appropriate color.
 
 # DEMO
 
-準備中
-
-coming soon
+https://color-palette-app-c87dd.web.app/
 
 # Features
 
